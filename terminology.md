@@ -140,11 +140,11 @@ A site is a location where components of your application are running.
 Sites are linked together to form a network.
 
 Sites have different kinds based on platform.  These include
-Kubernetes, Podman, virtual machines, and bare metal hosts.
+Kubernetes namespaces, Podman hosts including virtual machines and bare metal environments.
 
 ### Link
 
-A link is a site-to-site communication channel.  Links serve as a
+A link is a site-to-site TCP communication channel.  Links serve as a
 transport for application traffic such as connections and requests.
 Links are always encrypted using mutual TLS.
 
@@ -152,7 +152,7 @@ Links are always encrypted using mutual TLS.
 
 A token is required to create a link.  The token contains a URL, which
 locates the ingress of the target site, and a secret, which represents
-the authority to create a link.
+the authority to create the link.
 
 Tokens can be restricted to a chosen number of uses inside a limited
 time window.  By default, tokens allow only one use and expire after
@@ -161,8 +161,7 @@ time window.  By default, tokens allow only one use and expire after
 ## Skupper listeners and connectors
 
 Site-to-site links are distinct from service-to-service connections.
-Site links form the underlying transport for your network.  Service
-connections are carried on top of this transport.
+Links enable site-to-site communication, you create service connections on top of this transport to enable components of your distributed application to communicate.
 
 In this example, sites "west" and "east" have links to site "central".
 Workload "frontend" is running on "west", and workload "backend" on
@@ -183,11 +182,12 @@ Site link layer          +-------------+          +----------------+          +-
 ~~~
 
 **Listeners** and **connectors** work together to route service
-connections across the network.  Listeners provide a local connection
-endpoint for remote services.  Connectors specify the local processes
-that handle remote service connections.
+connections across the network.  
 
-Listeners and connectors are linked by matching **routing keys**.
+* Listeners provide a local connection endpoint for remote services.  
+* Connectors specify the local processes that handle remote service connections.
+
+Listeners and connectors are coupled by matching **routing keys**.
 Connections to a listener with a given routing key are forwarded to
 remote connectors with the same routing key.
 
